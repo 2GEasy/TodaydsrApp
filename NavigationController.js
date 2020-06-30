@@ -22,7 +22,7 @@ import StoreView from './page/StoreView';
 import Menu from './page/Menu';
 import Order from './page/Order';
 import Cart from './page/Cart';
-
+import Filtering from './components/Filterling';
 function Setting({navigation}) {
     return (
         <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
@@ -97,9 +97,7 @@ export default function NavigationController() {
                       
                     }}/>
                     <Stack.Screen name="Profile" component={Profile} />
-                    {/* <Stack.Screen name="Signup" component={Signup} options={{title:"회원가입"}}/>
-                    <Stack.Screen name="Login" component={Login} options={{title:"로그인"}}/> */}
-                    <Stack.Screen name="category" component={CategoryStores} options={{title:"스토어 목록",headerRight:()=><Button transparent style={{width:50}}><MaterialCommunityIcons name="filter" size={26} style={{color:'#ff9800'}}/></Button>}}/>
+                    <Stack.Screen name="category" component={CategoryStores} options={{title:"스토어 목록"}}/>
                     <Stack.Screen name="Store" component={StoreView} options={{title:'',headerTitleAlign:"center"}}/>
                     <Stack.Screen name="Menu" component={Menu} options={{title:'메뉴',headerTitleAlign:"center",headerBackTitleStyle:{color:'black'}}}/>
                     <Stack.Screen name="Order" component={Order} options={{title:'주문',headerTitleAlign:"center",headerBackTitleStyle:{color:'black'}}}/>

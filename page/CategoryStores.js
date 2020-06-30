@@ -1,61 +1,88 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useLayoutEffect} from 'react';
 import ApiService from '../ApiService';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import DaumMap from 'react-native-daummap';
 import Store from '../components/Store';
 import { ScrollView,Text } from 'react-native';
+import Filtering from '../components/Filterling';
 
 export default function CategoryStores({navigation,route}) {
+    const [tempStores,setTempStores] = useState([]);
+    const [tempStore,setTempStore] = useState({});
     const [stores,setStores] = useState([]);
+    const [dist,setDist] = useState(1001);
+    
+    // ,headerRight:()=><Filtering/>
+    useLayoutEffect(()=>{
+        navigation.setOptions({headerRight:()=><Filtering setDist={setDist} refresh={refresh}/>});
+     },[])
+    useEffect(()=>{
+        tempStores.map(async (c)=>{
+            const distance = await addr2geo(c.storeAddr1);
+            console.log("distance:"+distance);
+            if(distance<dist) {
+                c.distance=distance;
+                setTempStore(c);
+                
+                // console.log("true:",c);
+            }
+        });
+        // setStores(stores.concat(arr));
+    },[tempStores])
+    useEffect(()=>{
+        console.log("update stores:",stores);
+    },[stores])
+    useEffect(()=>{
+        if(!(Object.keys(tempStore).length===0)) {
+            setStores(stores.concat(tempStore));
+        }
+    },[tempStore])
+    useEffect(()=>{
+        if(dist!==1001){
+            const {category} = route.params;
+            console.log(category);
+            
+            fetchStores(category);
+
+        }
+    },[dist])
+    const fetchStores=async(cate)=>{
+        const a = await ApiService.fetchStoreList(cate);
+
+        console.log("a:",a.data);
+        console.log("category:",cate);
+        console.log("fetchStoreList",stores);
+        setTempStores(a.data);
+        
+        console.log("fetchStoreList Under",stores);
+    }
     useEffect(()=>{
         const {category} = route.params;
         console.log(category);
         
-        fetchStoreList(category);
+        fetchStores(category);
     },[])
-    useEffect(()=>{
-        console.log("stores update",stores);
-    },[stores])
-    const fetchStoreList=(cate)=>{
-        console.log("category:",cate);
-        console.log("fetchStoreList",stores);
-        ApiService.fetchStoreList(cate)
-        .then(async res=>{
-            console.log("resdata:",res.data);
-            var tempStores = await res.data;
-            console.log("temp",temp);
-            tempStores.map(async (c)=>{
-              const distance = await addr2geo(c.storeAddr1);
-              console.log("distance:"+distance);
-              if(distance<1000) {
-                  c.distance=distance;
-                  console.log("under if:",stores);
-                  setStores(...stores,stores.concat(c));
-                console.log("true:",c);
-              }
-            });
-            console.log("stores:",stores);
-            
-          })
-        .catch(err=>{
-            console.log("fetchStores ERR",err);
-        })
-        console.log("fetchStoreList Under",stores);
-    }
     // const getDistance=async(addr)=>{
     //     return await addr2geo(addr);
     // }
+    const refresh=()=>{
+        setTempStores([]);
+        setTempStore({});
+        setStores([]);
+        // setDist(1001);
+    }
     const addr2geo=async(addr)=>{
         DaumMap.setRestApiKey("8e5143da909b41be58a6a22ae9436b9b");
         const result = await DaumMap.serachAddress(addr);
 
-        console.log(result.documents[0].x,result.documents[0].y);
+        // console.log(result.documents[0].x,result.documents[0].y);
         const temp = await fetchDistance(result.documents[0].x, result.documents[0].y);
         const distemp = temp.data.features[0].properties.totalDistance;
         // console.log("distemp:",distemp);
         return distemp;
     }
+
     const fetchDistance=async (sx,sy)=>{
     const geox = await AsyncStorage.getItem('cgeox');
     const geoy = await AsyncStorage.getItem('cgeoy');
@@ -97,7 +124,12 @@ export default function CategoryStores({navigation,route}) {
     const returnStore=(data)=>{
         return data.map((c,index)=>{
             return <Store key={index} su_id={c.su_id} storeImgChk={c.storeImgChk} storeName={c.storeName} storeExplain={c.storeExplain} deliverPosible={c.deliverPosible} abledeliverS={c.abledeliverS} abledeliverE={c.abledeliverE} distance={c.distance} count={c.count} favorite={c.favorite} />;
-        }) 
+        })
+   
+        // setTempStores([]);
+        // setTempStore({});
+        // setStores([]);
+        // setDist(1001);
     }
     const returnNone=()=>{
         return <Text>일치하는 스토어가 없습니다!</Text>
@@ -105,7 +137,7 @@ export default function CategoryStores({navigation,route}) {
     return (
         <>
             <ScrollView>
-                {stores?returnStore(stores):returnNone()}
+                {stores.length>0?returnStore(stores):returnNone()}
                 
             </ScrollView>
         </>

@@ -3,6 +3,7 @@ import {View,Text, Image, AsyncStorage} from 'react-native';
 import {Button} from 'native-base';
 import DaumMap from 'react-native-daummap';
 import ImagePicker from 'react-native-image-picker';
+import ImagePickerCrop from 'react-native-image-crop-picker';
 import Axios from 'axios';
 
 export default function MyPage({navigation}) {
@@ -23,6 +24,7 @@ export default function MyPage({navigation}) {
         }
         getStart();
     },[])
+    let data = new FormData();
     const showPicker=()=>{
         const options = {
             title: '선택',
@@ -52,14 +54,41 @@ export default function MyPage({navigation}) {
             }
         });
     }
+    const showPickCrop=()=>{
+        ImagePickerCrop.openPicker({
+            multiple:true,
+            waitAnimationEnd:false,
+            includeExif:true,
+            compressImageQuality:0.8,
+            mediaType:'photo'
+        })
+        .then(images=>{
+            images.map((item,index)=>{
+                console.log(JSON.stringify(item));
+                data.append("file",item);
+            })
+            upload();
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+    }
+    const upload=()=>{
+        fetch("https://todaydsr.kro.kr:8090/reviewImg/test1/puser1234/30",{
+            method:'post',
+            headers:{'Accept':"application/x-www-form-unlencoded",
+        },
+        body:data,
+        })
+        .then(res=>res.json())
+        .then(console.log("Success"))
+        .catch(err=>{
+            console.log(err);
+        })
+    }
     const handlePostImg=async(img)=> {
         const formData = new FormData();
-        formData.append('file',{
-            name: img.fileName,
-            type: img.type,
-            uri: img.uri,
-            path: img.path
-        });
+        formData.append('file',img);
         let config = {
             headers: {
               'Content-Type': 'multipart/form-data'
@@ -88,6 +117,7 @@ export default function MyPage({navigation}) {
             <Text style={{alignSelf:'center',fontSize:14}}>{id}님</Text>
             {/* <Button title="로그인" onPress={()=>navigation.navigate('Login')}> */}
             <Button onPress={showPicker} style={{alignSelf:'center',width:100,justifyContent:'center'}}><Text>이미지</Text></Button>
+            <Button onPress={showPickCrop} style={{alignSelf:'center',width:100,justifyContent:'center'}}><Text>이미지크롭</Text></Button>
             {photo&&(<Image source={{uri:photo.uri}} style={{width:300,height:300}}/>)}
             {sess&&
             <Button onPress={()=>clickLogout()} style={{backgroundColor:'#ff9800',justifyContent:'center',width:100,alignSelf:'center'}}><Text>로그아웃</Text></Button>
