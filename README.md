@@ -2,14 +2,14 @@
 
 2020 오늘도시락 구매자 앱
 
-React Native
-React Navigation
-React Native Paper
-NativeBase
-Firebase
-Daum Postcode Api
-Kakao map Api
-Tmap Api
+React Native<br>
+React Navigation<br>
+React Native Paper<br>
+NativeBase<br>
+Firebase<br>
+Daum Postcode Api<br>
+Kakao map Api<br>
+Tmap Api<br>
 
 -회원가입, 로그인, 회원정보 수정<br>
 -주소 지정, 판매자 스토어 간 거리 측정 필터링<br>
