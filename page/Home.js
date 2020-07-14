@@ -1,9 +1,18 @@
 import React,{useState,useEffect} from 'react';
-import {View,Image} from 'react-native';
+import {View,Image, AsyncStorage} from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
 
 
 export default function Home({navigation}) {
+    useEffect(()=>{
+        async function getStart() {
+            if(!(await AsyncStorage.getItem('cid'))) {
+                alert('로그인을 해주세요!');
+                navigation.navigate('Login');
+            }
+        }
+        getStart();
+    },[])
     return (
         <>
         <View style={{flex:1,flexDirection:'row',margin:10,height:'50%'}}>

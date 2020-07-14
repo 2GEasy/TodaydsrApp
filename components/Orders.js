@@ -99,23 +99,25 @@ export default function Orders(props) {
     }
     return (
         <View>
+          {file&&storeInf&&orderMenu&&reviewChk!==null&&(
             <Card>
                 <CardItem button onPress={()=>navigation.navigate('Store',{"su_id":props.su_id,"storeName":storeInf.storeName})}>
                 <Left>
                     {file?
-                    <Thumbnail style={{width: 100, height: 100, borderRadius: 0}} source={{uri:"https://todaydsr.kro.kr:8090/upload/store/"+file.fileName}} />
+                    <Thumbnail style={{width: 100, height: 100, borderRadius: 0}} source={{uri:"http://todaydsr.kro.kr:7979/upload/store/"+file.fileName}} />
                     :
                     <Thumbnail style={{width: 100, height: 100, borderRadius: 0}} source={{uri:"https://placeimg.com/64/64/2"}} />
                     }
                     <Body>
                     <Text note>{props.ordDate}</Text>
                     <Text>{storeInf.storeName}</Text>
-                    {orderMenu?attach(orderMenu):<Text>Loading</Text>}
-                    <View>{reviewChk!==null?returnButton(reviewChk):<Text>Loading...</Text>}</View>
+                    {attach(orderMenu)}
+                    <View>{returnButton(reviewChk)}</View>
                     </Body>
                 </Left>
                 </CardItem>
             </Card>
+          )}
         </View>
     );
 }

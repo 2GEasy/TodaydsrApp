@@ -16,11 +16,11 @@ import {
   ScrollView,
   View,
 } from 'react-native';
+console.disableYellowBox = true;
 
 import NavigationController from './NavigationController';
 import Axios from 'axios';
 const App = () => {
-
   messaging().onMessage(async remoteMessage => {
     Alert.alert(remoteMessage.data.title,remoteMessage.data.message);
     

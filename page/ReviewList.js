@@ -1,5 +1,5 @@
-import React,{useState,useEffect, useLayoutEffect} from 'react';
-import {useNavigation,useRoute} from '@react-navigation/native';
+import React,{useState,useEffect, useLayoutEffect,useCallback} from 'react';
+import {useNavigation,useRoute,useFocusEffect} from '@react-navigation/native';
 import Review from '../components/Review';
 import { View } from 'react-native';
 import ApiService from '../ApiService';
@@ -12,6 +12,17 @@ export default function ReviewList(props) {
     useEffect(()=>{
         fetchReviewList(route.params.su_id);
     },[])
+    useFocusEffect(useCallback(() => {
+        console.debug("screen takes focus");
+        getStart();
+        return () => {console.debug("screen loses focus");loseFocus();};
+      }, []));
+    async function getStart() {
+        fetchReviewList(route.params.su_id);
+    }
+    const loseFocus=()=>{
+        setReviews([]);
+    }
     const fetchReviewList=(su_id)=>{
         ApiService.fetchReviewList(su_id)
         .then(res=>{

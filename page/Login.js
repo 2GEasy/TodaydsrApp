@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {useNavigation,useRoute} from '@react-navigation/native';
+import React, { useState, useEffect,useCallback } from 'react';
+import {useNavigation,useRoute,useFocusEffect} from '@react-navigation/native';
 import { Container, Header, Content, DatePicker,Text,Form, Item, Input, Label,Button, ListItem, Left,Right, Radio } from 'native-base';
 import messaging from '@react-native-firebase/messaging';
 import ApiService from '../ApiService';
@@ -21,6 +21,7 @@ export default function Login(props) {
         }
         getStart();
     },[login])
+    
     const onLogin=()=>{
         ApiService.loginUser(login.pu_id,login.pw)
         .then(async res=>{

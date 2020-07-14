@@ -30,7 +30,7 @@ export default function Menus(props) {
     }
     const getUrl=()=>{
         
-        return "https://todaydsr.kro.kr:8090/upload/menu/"+file.fileName;
+        return "http://todaydsr.kro.kr:7979/upload/menu/"+file.fileName;
     }
     return (
         <View>

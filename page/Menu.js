@@ -58,7 +58,7 @@ export default function Menu(props) {
         .catch(err=>{
             console.log("insertCart Error",err);
         })
-        navigation.navigate('Order',{"su_id":route.params.su_id})
+        navigation.navigate('Cart',{"su_id":route.params.su_id})
     }
     return (
         <View style={{backgroundColor:'#ffffff',padding:20,height:'100%'}}>

@@ -44,8 +44,11 @@ export default function Signup({navigation}) {
             addr2:user.addr2,
         }
         ApiService.insertUser(tempUser)
-        .then(res=>console.log(res)
-        )
+        .then(res=>{
+            console.log(res.data);
+            alert('회원가입을 성공하였습니다. 로그인을 해주세요!');
+            navigation.navigate('Login');
+        })
         .catch(err=>console.log(err)
         )
     }
@@ -118,7 +121,7 @@ export default function Signup({navigation}) {
                                     disabled={false}
                             />
                         </View>
-                        <Button transparent warning style={{flex:1,justifyContent:'center',alignItems:'center',margin:20}} onPress={()=>insertUser}><Text style={{color:'white',fontWeight:'bold'}}>회원가입</Text></Button>
+                        <Button transparent warning style={{flex:1,justifyContent:'center',alignItems:'center',margin:20}} onPress={()=>insertUser()}><Text style={{color:'white',fontWeight:'bold'}}>회원가입</Text></Button>
                     </Form>
                     <Button transparent style={{flex:1,justifyContent:'center',alignItems:'center'}} onPress={()=>navigation.navigate('Login')}>
                         <Text style={{color:'steelblue'}}>이미 회원가입하셨다면 로그인해주세요!</Text>

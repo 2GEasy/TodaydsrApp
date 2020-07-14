@@ -33,7 +33,7 @@ export default function Store(props) {
     }
     const getUrl=()=>{
         
-        return "https://todaydsr.kro.kr:8090/upload/store/"+file.fileName;
+        return "http://todaydsr.kro.kr:7979/upload/store/"+file.fileName;
     }
     return (
         

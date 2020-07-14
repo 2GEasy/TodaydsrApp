@@ -1,9 +1,9 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useCallback} from 'react';
 import { Image,View, AsyncStorage, AppState } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right, Textarea } from 'native-base';
 import { Modal, Portal, Provider } from 'react-native-paper';
 import ApiService from '../ApiService';
-import {useNavigation,useRoute} from '@react-navigation/native';
+import {useNavigation,useRoute,useFocusEffect} from '@react-navigation/native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import FavoriteStore from '../components/FavoriteStore';
 export default function Orders(props) {
@@ -17,6 +17,17 @@ export default function Orders(props) {
         }
         getStart();
       },[]);
+      useFocusEffect(useCallback(() => {
+        console.debug("screen takes focus");
+        getStart();
+        return () => {console.debug("screen loses focus");loseFocus();};
+      }, []));
+      async function getStart() {
+        fetchFavorite(await AsyncStorage.getItem('cid'));
+      }
+      const loseFocus=()=>{
+        setFavorites([]);
+      }
       const fetchFavorite=(pu_id)=>{
         
         ApiService.fetchFavorite(pu_id)

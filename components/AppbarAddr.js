@@ -65,7 +65,7 @@ export default function AppbarAddr(props) {
             <>
                 <View>
                     <Button transparent onPress={handlePress} style={{flex:1,justifyContent:'center'}}><MaterialCommunityIcons name="map-marker" size={26} style={{color:'#FFFFFF'}}/><Text style={{color:'white'}}>{title?title:"주소를 지정해주세요."}</Text></Button>
-                    <Modal isVisible={open}>
+                    <Modal isVisible={open} style={{width:350}}>
                         <View style={{flex:1,justifyContent:'center',alignItems:'center',maxHeight:400}}>        
                             <Postcode 
                                 style={{width:350,maxHeight:400}}
@@ -73,7 +73,7 @@ export default function AppbarAddr(props) {
                                 onSelected={(data)=>handleAddress(data)}
                             />
                         </View>
-                        <Button onPress={handlePress} style={{width:350,marginLeft:10,backgroundColor:'orange',flex:0,justifyContent:'center',alignItems:'center'}}><Text style={{color:'white',fontWeight:'bold'}}>취소</Text></Button>
+                        <Button onPress={handlePress} style={{width:350,backgroundColor:'orange',justifyContent:'center',alignItems:'center'}}><Text style={{color:'white',fontWeight:'bold'}}>취소</Text></Button>
                     </Modal>
                 </View>
             </>

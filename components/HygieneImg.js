@@ -30,7 +30,7 @@ export default function HygieneImg(props) {
             // console.log("fetchHygieneImg.");
             setHimg(res.data);
             res.data.map((c,index)=>{
-                setPath(path.concat({"url":"https://todaydsr.kro.kr:8090/upload/hygiene/"+c.fileName}));
+                setPath(path.concat({"url":"http://todaydsr.kro.kr:7979/upload/hygiene/"+c.fileName}));
             })
         })
         .catch(err=>{

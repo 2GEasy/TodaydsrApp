@@ -22,7 +22,7 @@ export default function ReviewImg(props) {
         .then(res=>{
             setReviewImgs(res.data);
             res.data.map((c,index)=>{
-                setPath(path.concat({"uri":"https://todaydsr.kro.kr:8090/upload/review/"+c.fileName}));
+                setPath(path.concat({uri:"http://todaydsr.kro.kr:7979/upload/review/"+c.fileName}));
             })
         })
         .catch(err=>{
@@ -31,7 +31,7 @@ export default function ReviewImg(props) {
     }
     const returnReviewImgs=(path)=>{
         return reviewImgs.map((c,index)=>{
-                return <Image source={{uri:"https://todaydsr.kro.kr:8090/upload/review/"+c.fileName}} style={{width:120,height:100,margin:10}}/>
+                return <Image source={{uri:"http://todaydsr.kro.kr:7979/upload/review/"+c.fileName}} style={{width:120,height:100,margin:10}}/>
         })
         // return (
         //     <View style={{flex:1,alignItems:'center'}}>
@@ -69,7 +69,7 @@ export default function ReviewImg(props) {
             // <Image style={{width: "100%", borderRadius: 0}} source={{uri:"https://via.placeholder.com/150"}} />
             // }
         <View style={{flexDirection:'row'}}>
-            {path?returnReviewImgs(path):null}
+            {returnReviewImgs(path)}
             {/* {path?returnTest(path):null} */}
             {/* <Image source={{uri:getUrl("02d7ec29-1c35-425d-9099-bbf8d0697731.jpg")}} style={{width:100,height:100}}/> */}
         </View>

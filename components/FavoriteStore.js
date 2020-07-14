@@ -32,10 +32,10 @@ export default function Orders(props) {
     return (
         <View>
             <Card>
-                <CardItem button onPress={()=>navigation.navigate('Store',{"su_id":props.su_id,"storeName":storeInf.storeName})}>
+                <CardItem button onPress={()=>navigation.navigate('Store',{"su_id":props.su_id,"storeName":props.storeName})}>
                 <Left>
                     {file?
-                    <Thumbnail style={{width: 100, height: 100, borderRadius: 0}} source={{uri:"https://todaydsr.kro.kr/upload/store/"+file.fileName}} />
+                    <Thumbnail style={{width: 100, height: 100, borderRadius: 0}} source={{uri:"http://todaydsr.kro.kr:7979/upload/store/"+file.fileName}} />
                     :
                     <Thumbnail style={{width: 100, height: 100, borderRadius: 0}} source={{uri:"https://placeimg.com/64/64/2"}} />
                     }
