@@ -18,20 +18,32 @@ export default function CategoryStores({navigation,route}) {
         navigation.setOptions({headerRight:()=><Filtering setDist={setDist} refresh={refresh}/>});
      },[])
     useEffect(()=>{
-        tempStores.map(async (c)=>{
+        tempStores.map(async (c,i)=>{
+            // const distance;
+            // if(!timer) {
+            //     timer = setTimeout(async function() {
+            //         timer=null;
+            //         distance= await addr2geo(c.storeAddr1);
+            //         console.log(i);
+            //     },2000);
+            // }
             const distance = await addr2geo(c.storeAddr1);
+
             console.log("distance:"+distance);
+            
             if(distance<dist) {
                 c.distance=distance;
                 setTempStore(c);
                 
                 // console.log("true:",c);
             }
+                
+            
         });
         // setStores(stores.concat(arr));
     },[tempStores])
     useEffect(()=>{
-        console.log("update stores:",stores);
+        // console.log("update stores:",stores);
     },[stores])
     useEffect(()=>{
         if(!(Object.keys(tempStore).length===0)) {
@@ -50,16 +62,16 @@ export default function CategoryStores({navigation,route}) {
     const fetchStores=async(cate)=>{
         const a = await ApiService.fetchStoreList(cate);
 
-        console.log("a:",a.data);
-        console.log("category:",cate);
-        console.log("fetchStoreList",stores);
+        // console.log("a:",a.data);
+        // console.log("category:",cate);
+        // console.log("fetchStoreList",stores);
         setTempStores(a.data);
-        
-        console.log("fetchStoreList Under",stores);
+        // setStores(a.data);
+        // console.log("fetchStoreList Under",stores);
     }
     useEffect(()=>{
         const {category} = route.params;
-        console.log(category);
+        // console.log(category);
         
         fetchStores(category);
     },[])
@@ -72,22 +84,27 @@ export default function CategoryStores({navigation,route}) {
         setStores([]);
         // setDist(1001);
     }
+    const delay=(t,data)=> {
+        return new Promise(resolve=>{
+            setTimeout(resolve.bind(null,data),t);
+        })
+    }
     const addr2geo=async(addr)=>{
         DaumMap.setRestApiKey("8e5143da909b41be58a6a22ae9436b9b");
         const result = await DaumMap.serachAddress(addr);
-
+        console.log("addr2geo:"+addr+","+result.documents[0]);
         // console.log(result.documents[0].x,result.documents[0].y);
         const temp = await fetchDistance(result.documents[0].x, result.documents[0].y);
         const distemp = temp.data.features[0].properties.totalDistance;
-        // console.log("distemp:",distemp);
+        console.log("distemp:",distemp);
         return distemp;
     }
-
+    var timer;
     const fetchDistance=async (sx,sy)=>{
     const geox = await AsyncStorage.getItem('cgeox');
     const geoy = await AsyncStorage.getItem('cgeoy');
     // console.log("customerGeo:",geox,geoy);
-    // console.log("storegeo:",sx,sy)
+    console.log("storegeo:",sx,sy)
     let data = {
       "appKey": "l7xx56452204358449a5b2870d785ce145da",
       "startX": sx,
@@ -113,13 +130,23 @@ export default function CategoryStores({navigation,route}) {
          return [str, delimiter, key, '=', val].join('');
       }, '');
    }
-  
+   
+   var resp;
+   
+       await axios.post("https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result",
+    
+       objectToQuerystring(data), config)
+       .then(res=>{
+            resp=res;
+       })
+       .catch(err=>{
+           console.log("fetchDistance:",err);
+       })
 
-   const res = await axios.post("https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result",
-
-   objectToQuerystring(data), config);
-  
-   return res;
+   
+   
+//    console.log(resp)
+   return resp;
   };
     const returnStore=(data)=>{
         return data.map((c,index)=>{
