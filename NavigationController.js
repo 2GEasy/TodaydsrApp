@@ -3,7 +3,7 @@ import {View,Text, AsyncStorage} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
+import messaging, { AuthorizationStatus } from '@react-native-firebase/messaging';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -82,7 +82,15 @@ export default function NavigationController() {
         }
       }
       getStart();
+      messaging().onNotificationOpenedApp(async remoteMessage => {
+        console.log(
+          'Notification caused app to open from background state:',
+          remoteMessage.notification,
+        );
+        navigation.navigate(remoteMessage.data.url);
+      });
     },[])
+    
     return(
         <>
             <NavigationContainer>

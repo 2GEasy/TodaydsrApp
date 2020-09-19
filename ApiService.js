@@ -19,8 +19,8 @@ class ApiService {
     fetchStoreByID(su_id) {
         return axios.get("https://todaydsr.kro.kr:8090/store/" + su_id);
     }
-    fetchStoreList(category) {
-        return axios.get("https://todaydsr.kro.kr:8090/store/category/" + category);
+    async fetchStoreList(category) {
+        return await axios.get("https://todaydsr.kro.kr:8090/store/category/" + category);
     }
     deleteUser(pu_id) {
         return axios.delete("https://todaydsr.kro.kr:8090/puser/"+pu_id);

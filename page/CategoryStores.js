@@ -17,26 +17,28 @@ export default function CategoryStores({navigation,route}) {
     useLayoutEffect(()=>{
         navigation.setOptions({headerRight:()=><Filtering setDist={setDist} refresh={refresh}/>});
      },[])
+    
     useEffect(()=>{
+        console.log("tempStores:",tempStores.length);
         tempStores.map(async (c,i)=>{
-            // const distance;
-            // if(!timer) {
-            //     timer = setTimeout(async function() {
-            //         timer=null;
-            //         distance= await addr2geo(c.storeAddr1);
-            //         console.log(i);
-            //     },2000);
-            // }
-            const distance = await addr2geo(c.storeAddr1);
-
-            console.log("distance:"+distance);
+            var distance;
+            (function() {
+                setTimeout(async function() {
+                    
+                    distance= await addr2geo(c.storeAddr1);
+                    console.log("distance:"+distance);
+                    console.log(i);
+                    if(distance<dist) {
+                        c.distance=distance;
+                        setTempStore(c);
+                        
+                        // console.log("true:",c);
+                    }
+                },500*i)
+            })(c)
+           
+            // const distance = await addr2geo(c.storeAddr1);
             
-            if(distance<dist) {
-                c.distance=distance;
-                setTempStore(c);
-                
-                // console.log("true:",c);
-            }
                 
             
         });

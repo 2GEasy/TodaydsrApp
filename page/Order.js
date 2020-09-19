@@ -62,7 +62,8 @@ export default function Order(props) {
                 user_id: route.params.su_id,
                 user_type : 's',
                 title: "주문 확인",
-                message: await AsyncStorage.getItem('cid')+"님의 주문이 확인되었습니다."
+                message: await AsyncStorage.getItem('cid')+"님의 주문이 확인되었습니다.",
+                url: "https://todaydsr.kro.kr/order"
             }
             sendNotification(notification);
             setActiveStep(activeStep + 1);
