@@ -12,7 +12,9 @@ export default function CategoryStores({navigation,route}) {
     const [tempStore,setTempStore] = useState({});
     const [stores,setStores] = useState([]);
     const [dist,setDist] = useState(1001);
-    
+    const [cnt, setCnt] = useState(0);
+    const [didCnt, setDidCnt] = useState(0);
+    const [done, setDone] = useState(false);
     // ,headerRight:()=><Filtering/>
     useLayoutEffect(()=>{
         navigation.setOptions({headerRight:()=><Filtering setDist={setDist} refresh={refresh}/>});
@@ -22,12 +24,14 @@ export default function CategoryStores({navigation,route}) {
         console.log("tempStores:",tempStores.length);
         tempStores.map(async (c,i)=>{
             var distance;
-            (function() {
+            //초당 거리 측정 API 사용 제한 횟수를 방지하기 위해 즉시 실행함수와 setTimeout을 이용해 딜레이를 줌
+            (function() { //즉시 실행함수
                 setTimeout(async function() {
-                    
+                    // await setDidCnt(...didCnt,didCnt+1);
                     distance= await addr2geo(c.storeAddr1);
                     console.log("distance:"+distance);
                     console.log(i);
+                    setDidCnt(i+1);
                     if(distance<dist) {
                         c.distance=distance;
                         setTempStore(c);
@@ -44,6 +48,12 @@ export default function CategoryStores({navigation,route}) {
         });
         // setStores(stores.concat(arr));
     },[tempStores])
+    useEffect(()=>{
+        console.log("didCnt:",didCnt);
+        if(cnt==didCnt) {
+            setDone(true);
+        }
+    },[didCnt])
     useEffect(()=>{
         // console.log("update stores:",stores);
     },[stores])
@@ -68,6 +78,8 @@ export default function CategoryStores({navigation,route}) {
         // console.log("category:",cate);
         // console.log("fetchStoreList",stores);
         setTempStores(a.data);
+        // console.log("fetchStores Count:",a.data.length);
+        await setCnt(a.data.length);
         // setStores(a.data);
         // console.log("fetchStoreList Under",stores);
     }
@@ -86,11 +98,7 @@ export default function CategoryStores({navigation,route}) {
         setStores([]);
         // setDist(1001);
     }
-    const delay=(t,data)=> {
-        return new Promise(resolve=>{
-            setTimeout(resolve.bind(null,data),t);
-        })
-    }
+    
     const addr2geo=async(addr)=>{
         DaumMap.setRestApiKey("8e5143da909b41be58a6a22ae9436b9b");
         const result = await DaumMap.serachAddress(addr);
@@ -161,12 +169,12 @@ export default function CategoryStores({navigation,route}) {
         // setDist(1001);
     }
     const returnNone=()=>{
-        return <Text>일치하는 스토어가 없습니다!</Text>
+        return <Text>스토어 탐색 중 입니다!</Text>
     }
     return (
         <>
             <ScrollView>
-                {stores.length>0?returnStore(stores):returnNone()}
+                {cnt===didCnt?returnStore(stores):returnNone()}
                 
             </ScrollView>
         </>

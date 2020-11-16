@@ -49,13 +49,13 @@ export default function MyPage({navigation}) {
       }
     return (
         <View>
-            <Text style={{fontSize:20,fontWeight:'bold'}}>MyPage</Text>
-            <Text style={{alignSelf:'center',fontSize:14}}>{id}님</Text>
+            <Text style={{fontSize:20,fontWeight:'bold',textAlign:'center'}}>MyPage{`\n`}</Text>
+            <Text style={{alignSelf:'center',fontSize:14}}>{id}님{`\n`}</Text>
             {/* <Button title="로그인" onPress={()=>navigation.navigate('Login')}> */}
             
             {sess&&(
             <>
-            <Button style={{backgroundColor:'#ff9800',justifyContent:'center',width:100,alignSelf:'center',margin:10}}><Text>회원정보수정</Text></Button>
+            {/* <Button style={{backgroundColor:'#ff9800',justifyContent:'center',width:100,alignSelf:'center',margin:10}}><Text>회원정보수정</Text></Button> */}
             <Button onPress={()=>clickLogout()} style={{backgroundColor:'#ff9800',justifyContent:'center',margin:10,width:100,alignSelf:'center'}}><Text>로그아웃</Text></Button>
             </>
             )}
